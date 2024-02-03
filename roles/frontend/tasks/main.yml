@@ -1,12 +1,6 @@
 
-#    func_print_head "copy roboshop conf file"
-#    cp roboshop.conf /etc/nginx/default.d/roboshop.conf &>>$log_file
-#    func_status_check $?
-#
-#    func_print_head "remove nginx html content"
-#    rm -rf /usr/share/nginx/html/* &>>$log_file
-#    func_status_check $?
-#
+
+
 #    func_print_head "get frontend zip file"
 #    curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend.zip &>>$log_file
 #    func_status_check $?
@@ -34,3 +28,18 @@
     src: roboshop.conf
     dest: /etc/nginx/default.d/roboshop.conf
 
+- name: remove nginx html content
+  ansible.builtin.file:
+    path: /usr/share/nginx/html
+    state: absent
+
+- name: create app directory
+  ansible.builtin.file:
+    path: /usr/share/nginx/html
+    state: directory
+
+- name: get frontend zip file
+  ansible.builtin.unarchive:
+    src: /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend.zip
+    dest: /usr/share/nginx/html
+    remote_src: yes
