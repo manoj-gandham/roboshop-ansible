@@ -1,0 +1,35 @@
+
+#func_print_head "Install python Dependencies"
+#pip3.6 install -r requirements.txt &>>$log_file
+#func_status_check $?
+#
+#func_print_head "update password in system service file"
+#sed -i -e "s|rabbitmq_appuser_password|${rabbitmq_appuser_password}|" ${script_path}/payment.service &>>$log_file
+#func_status_check $?
+#
+#func_systemd_setup
+
+- name: Install Python
+  ansible.builtin.yum:
+    name:
+      - python36
+      - gcc
+      - python3-devel
+    state: installed
+
+- name: Include task list in play
+  ansible.builtin.import_tasks:
+    file: app_prereq.yml
+
+- name: Install python Dependencies
+  ansible.builtin.shel: pip3.6 install -r requirements.txt
+  args:
+    chdir: /app
+
+- name: Include task list in play
+  ansible.builtin.import_tasks:
+    file: schema_setup.yml
+
+- name: Include systemD
+  ansible.builtin.import_tasks:
+    file: systemd_setup.yml
