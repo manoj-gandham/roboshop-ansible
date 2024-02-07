@@ -7,13 +7,25 @@
 #systemctl enable ${component} &>>$log_file
 #systemctl restart ${component} &>>$log_file
 #func_status_check $?
-
-- name: Setup SystemD Service
+#
+#- name: Setup SystemD Service
+#  ansible.builtin.template:
+#    src: "{{ component }}.service"
+#    dest: /etc/systemd/system/{{ component }}.service
+#
+#- name: start {{ component }} service
+#  ansible.builtin.systemd:
+#    name: "{{ component }}"
+#    state: restarted
+#    enabled: true
+#    daemon_reload: true
+#
+- name: Setup SystemD Service file
   ansible.builtin.template:
-    src: "{{ component }}.service"
-    dest: /etc/systemd/system/{{ component }}.service
+    src: "{{component}}.service"
+    dest: /etc/systemd/system/{{component}}.service
 
-- name: start {{ component }} service
+- name: Start {{ component }} service
   ansible.builtin.systemd:
     name: "{{ component }}"
     state: restarted
