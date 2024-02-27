@@ -1,6 +1,6 @@
 - name: copy prometheus conf file
   ansible.builtin.template:
-    src: prometheus
+    src: prometheus.yml
     dest: /opt/prometheus/prometheus.yml
 
 - name: restart prometheus
