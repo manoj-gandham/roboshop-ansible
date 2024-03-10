@@ -8,3 +8,30 @@ groups:
           severity: page
         annotations:
           summary: High CPU Alert
+
+      - alert: HighMemoryUtilization
+        expr: 100 - (100*((node_memory_MemFree_bytes+node_memory_Cached_bytes+node_memory_Buffers_bytes)/node_memory_MemTotal_bytes)) < 30
+        for: 1m
+        labels:
+          severity: page
+        annotations:
+          summary: High Memory Alert
+
+      - alert: ServerStatus
+        expr: up<1
+        for: 1m
+        labels:
+          severity: page
+        annotations:
+          summary: Server Down
+
+      {% for componet in components %}
+
+      - alert: ServiceStatus
+        expr: node_systemd_unit_state{component="{{ component.name }}", state="active", exported_name="{{ component.service_name }}.service"}
+        for: 1m
+        labels:
+          severity: page
+        annotations:
+          summary: {{ component.name }} component - Service Down
+      {%- endfor %}
