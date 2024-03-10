@@ -27,7 +27,7 @@ groups:
 
      {% for component in components %}
 
-      - alert: ServiceDown
+      - alert: {{ component.name }}-ServiceDown
         expr: node_systemd_unit_state{component="{{ component.name }}", state="active", exported_name="{{ component.service_name }}.service"}
         for: 1m
         labels:
