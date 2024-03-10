@@ -28,7 +28,7 @@ groups:
      {% for component in components %}
 
       - alert: {{ component.name }}-ServiceDown
-        expr: node_systemd_unit_state{component="{{ component.name }}", state="active", exported_name="{{ component.service_name }}.service"}
+        expr: node_systemd_unit_state{component="{{ component.name }}", state="active", exported_name="{{ component.service_name }}.service"} < 1
         for: 1m
         labels:
           severity: page
